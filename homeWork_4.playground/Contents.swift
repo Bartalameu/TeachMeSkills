@@ -73,27 +73,18 @@ func dayNight (now isNight : Bool ) {
 
 
 
-// added variable "logic" for testing
 func whatNumber (x : Int) -> Bool {
-    var logic : Bool
-    switch x {
-    case 0...100:
-        if  x % 2 == 0 || x % 3 == 0 {
-            logic = false
-            print("The choosed number is complex , Bool = \(logic)")
-        }
-        else {
-            logic = true
-            print("The choosed number is simple , Bool = \(logic)")
-        }
-    default :
-    logic = false
-        
-    }
-    return logic
-}
+    //        case let number where  0...100 ~=number :
     
-//    whatNumber(x: 10)
+    if x < 2 {return true}
+    for i in 2..<x{
+        print ("\(i)")
+        if x % i == 0 { return false}
+    }
+    return true
+}
+
+   print("\(whatNumber(x: 9))")
 
 //8. Создать функцию, принимающую 1 аргумент — номер месяца (от 1 до 12), и
 //возвращающую время года, которому этот месяц принадлежит (зима, весна, лето или
@@ -283,7 +274,7 @@ var sorting = someNumbers.map {
 
 var oneString  = someWords.joined(separator: "  ")
 
-print("\(oneString)")
+//print("\(oneString)")
 
 
 
