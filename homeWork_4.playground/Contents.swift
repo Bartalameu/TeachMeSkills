@@ -276,6 +276,3 @@ var oneString  = someWords.joined(separator: "  ")
 
 //print("\(oneString)")
 
-
-
-
