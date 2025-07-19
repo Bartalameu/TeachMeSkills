@@ -18,10 +18,10 @@ enum partsOfYears {
 func getPartOfYears (month : Int) -> partsOfYears {
    
     switch month {
-    case 0 : return partsOfYears.summer
-    case 1 : return partsOfYears.winter
-    case 2 : return partsOfYears.autumn
-    case 3 : return partsOfYears.spring
+    case 3...5 : return partsOfYears.summer
+    case 12,1,2 : return partsOfYears.winter
+    case 9...11 : return partsOfYears.autumn
+    case 6...8 : return partsOfYears.spring
     default : return partsOfYears.summer
     }
     
@@ -38,19 +38,15 @@ func getNotNill (volumes : String?...) -> Int {
     var countNil = 0
     var oneWord : String = ""
     for x in volumes {
-        if x == nil  {
-            countNil += 1
+        if let word = x {
+            oneWord.append(word + " ")
         } else {
-            oneWord.append(x!)
+            countNil += 1
         }
-  
-        
     }
-
-    print("\(oneWord)")
+    print(oneWord)
     return countNil
 }
-
 
 
 print("\(getNotNill(volumes: "ONe", nil, nil, nil, "end"))")
@@ -60,19 +56,19 @@ print("\(getNotNill(volumes: "ONe", nil, nil, nil, "end"))")
 
 //4. Объявить опцианал, и сделать его разворачивание разными способами.
 
-var Zero : Int? = nil
+var zero : Int? = 1
 
 // classic
-if Zero  != nil {
+if zero  != nil {
     print("Not nil!")
 }
 
 //if let
 
-if let  zero = Zero {
-    Zero = 1
+if let  empty = zero {
+    zero = 1
 }
-else {print("\(Zero ?? 0)")}
+else {print("\(zero ?? 0)")}
 
 //guard let
 
@@ -85,11 +81,11 @@ func makeNill(num : Int?) {
 }
 
 //force unwrap
-print ("\(Zero!)")
+print ("\(zero!)")
 
 // nil - coalescing ??
 
-print ("\(Zero ?? 1)")
+print ("\(zero ?? 1)")
 
 //optional chaining
 
