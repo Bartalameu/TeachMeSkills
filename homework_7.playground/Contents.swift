@@ -138,19 +138,18 @@ class CreditCard : PaymentMethod {
     }
 }
 
-var creditCard = CreditCard(balance: 10.345)
 
 //creditCard.pay(amount: 5.5)
 
 
-struct CryptoWallet : PaymentMethod {
+class CryptoWallet : PaymentMethod {
     var balance: Double
     init(balance: Double) {
         self.balance = balance
     }
     func pay(amount: Double) -> Bool {
         if amount > 0 && amount <= balance {
-           // print("Transaction succesful, your balance now is ***\(balance.formatted())***")
+            balance -= amount
             return true
         } else {
             //print("Transactioin is not succseful, wrong value of paymant or low balance")
@@ -172,5 +171,7 @@ func processPayment (using pay : PaymentMethod, amount : Double) {
     
     
 }
+var creditCard = CreditCard(balance: 10.345)
+var cryptoWallet = CryptoWallet(balance: 100.345)
 
-processPayment(using: creditCard, amount: 100)
+processPayment(using: cryptoWallet, amount: 100)
