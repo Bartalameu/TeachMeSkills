@@ -7,7 +7,7 @@
 
 import UIKit
 
-class EditProfileViewConroller: UIViewController {
+class EditProfileViewConroller: UIViewController, UITextFieldDelegate {
     
     var complition : ((ProfileData) -> ())?
     
@@ -19,17 +19,17 @@ class EditProfileViewConroller: UIViewController {
         return infoStackView
     }()
     
-    let userName: UITextFieldPadding = {
-        let nameTextField = UITextFieldPadding ()
-        nameTextField.placeholder = "Name Of User"
-        nameTextField.layer.borderColor = UIColor(red: 0.5, green: 0.25, blue: 0.4, alpha: 0.8).cgColor
-        nameTextField.layer.borderWidth = 2
-        nameTextField.layer.cornerRadius = 10
-        nameTextField.font = UIFont.systemFont(ofSize: 30)
-        return nameTextField
+    let nameTextField: UITextFieldPadding = {
+        let name = UITextFieldPadding ()
+        name.placeholder = "Name Of User"
+        name.layer.borderColor = UIColor(red: 0.5, green: 0.25, blue: 0.4, alpha: 0.8).cgColor
+        name.layer.borderWidth = 2
+        name.layer.cornerRadius = 10
+        name.font = UIFont.systemFont(ofSize: 30)
+        return name
     }()
     
-    let emailOfUser: UITextFieldPadding = {
+    let emailTextField: UITextFieldPadding = {
         let email = UITextFieldPadding ()
         email.placeholder = "Email of User"
         email.layer.borderColor = UIColor(red: 0.5, green: 0.25, blue: 0.4, alpha: 0.8).cgColor
@@ -40,39 +40,63 @@ class EditProfileViewConroller: UIViewController {
     }()
     
     let phoneNumber: UITextFieldPadding = {
-        let phoneNumber = UITextFieldPadding ()
-        phoneNumber.placeholder = "Phone Number of User"
-        phoneNumber.layer.cornerRadius = 10
-        phoneNumber.layer.borderColor = UIColor(red: 0.5, green: 0.25, blue: 0.4, alpha: 0.8).cgColor
-        phoneNumber.layer.borderWidth = 2
-        phoneNumber.font = UIFont.systemFont(ofSize: 30)
-        return phoneNumber
+        let phone = UITextFieldPadding ()
+        phone.placeholder = "Phone Number of User"
+        phone.layer.cornerRadius = 10
+        phone.layer.borderColor = UIColor(red: 0.5, green: 0.25, blue: 0.4, alpha: 0.8).cgColor
+        phone.layer.borderWidth = 2
+        phone.font = UIFont.systemFont(ofSize: 30)
+        
+        return phone
         
     }()
     
     let saveButton: UIButton = {
-        let saveButton = UIButton ()
-        saveButton.backgroundColor = UIColor(red: 0.25, green: 0.55, blue: 0.45, alpha: 1.0)
-        saveButton.layer.cornerRadius = 20
-        saveButton.setTitle("Save Profile", for: .normal)
-        saveButton.titleLabel?.font = UIFont.systemFont(ofSize: 24)
-        return saveButton
+        let button = UIButton ()
+        button.backgroundColor = UIColor(red: 0.25, green: 0.55, blue: 0.45, alpha: 1.0)
+        button.layer.cornerRadius = 20
+        button.setTitle("Save Profile", for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 24)
+        return button
     } ()
+    
+    
     
     override func viewDidLoad() {
         view.backgroundColor = UIColor(red: 0.95, green: 0.95, blue: 0.95, alpha: 1.0)
         setupUI()
     }
     
+//    
+//    func textFieldDidBeginEditing(_ textField: UITextField) {
+//  
+//    }
+//    func textFieldDidEndEditing(_ textField: UITextField) {
+//        let name: String
+//        if let someName = nameTextField.text , someName.contains(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,50}$/) {
+//            name = someName
+//        } else {
+//            textField.text = "" 
+//            textField.attributedPlaceholder = NSAttributedString(
+//                string: "Enter your name",
+//                attributes: [
+//                    .foregroundColor: UIColor.red,
+//                    .font: UIFont.italicSystemFont(ofSize: 16)
+//                ]
+//            )
+//        }
+//    }
     private func setupUI() {
+        
         saveButton.addTarget(self, action: #selector(saveOnTapped), for: .touchUpInside)
         [infoStackView, saveButton].forEach{
             $0.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview($0)
         }
-        [userName, emailOfUser, phoneNumber].forEach {
+        [nameTextField, emailTextField, phoneNumber].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             infoStackView.addArrangedSubview($0)
+            $0.delegate = self
         }
         
         NSLayoutConstraint.activate([
@@ -86,38 +110,54 @@ class EditProfileViewConroller: UIViewController {
         ])
     }
     
-    @objc func saveOnTapped() {
+    @objc private func saveOnTapped() {
 //        complition?("Имя пользователя: \(userName.text), год рождения \(email.text), город \(phoneNumber.text) ")
 //        delegate?.saveData(text: "Имя пользователя: \(nameTextField.text), год рождения \(yearTextField.text), город \(cityTextField.text) " )
         
         let name: String
         let email: String
         let phone: String
-        
-        if let someName = userName.text , someName.contains(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,50}$/) {
+        if let someName = nameTextField.text , someName.contains(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,50}$/) {
             name = someName
         } else {
-            print("""
-                  Wrong typed User name, should be
-                  Minimum 8 characters
-                  Maximum 50 characters
-                  Minimum 1 alphabet
-                  Minimum 1 number
-                  No special characters
- """)
+            //            print("""
+            //
+            //                  Wrong typed User name, should be
+            //                  Minimum 8 characters
+            //                  Maximum 50 characters
+            //                  Minimum 1 alphabet
+            //                  Minimum 1 number
+            //                  No special characters
+            // """)
+            nameTextField.attributedPlaceholder = NSAttributedString(
+                string: "8–50 chars, at least 1 letter & 1 number, no symbols",
+                attributes: [
+                    .foregroundColor: UIColor.red,
+                    .font: UIFont.italicSystemFont(ofSize: 16)
+                ])
             return
         }
         
-        if let someEmail = emailOfUser.text, someEmail.contains( /^[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/) {
+        if let someEmail = emailTextField.text, someEmail.contains( /^[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/) {
             email = someEmail
         } else {
-            print("Wrong email, format should be somename@domain.com ")
+            emailTextField.attributedPlaceholder = NSAttributedString(
+                string: "Wrong email, format should be somename@domain.com",
+                attributes: [
+                    .foregroundColor: UIColor.red,
+                    .font: UIFont.italicSystemFont(ofSize: 16)
+                ])
             return
         }
         if let somePhone = phoneNumber.text, somePhone.contains(/^\+375\s(25|29|33|44)\s\d{3}\s\d{2}\s\d{2}$/) {
             phone = somePhone        }
         else {
-            print ("Wrong phone number formaе, should be +375 code XXX XX XX , where code: 25, 29, 33 or 44")
+            emailTextField.attributedPlaceholder = NSAttributedString(
+                string: "should be +375 code XXX XX XX , where code: 25, 29, 33 or 44",
+                attributes: [
+                    .foregroundColor: UIColor.red,
+                    .font: UIFont.italicSystemFont(ofSize: 16)
+                ])
             return
         }
         let profileData = ProfileData (nameOfUser: name, email: email, phoneNumber: phone)
