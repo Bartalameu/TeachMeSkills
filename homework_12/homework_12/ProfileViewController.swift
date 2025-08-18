@@ -68,7 +68,7 @@ class ProfileViewController: UIViewController {
         
     }
     
-    func saveData(text: String) {
+   private  func saveData(text: String) {
 //        infoLabel.text  = text
     }
     
