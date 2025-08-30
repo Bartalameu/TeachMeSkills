@@ -9,8 +9,6 @@ import UIKit
 
 class ButtonsPanelView: UIView {
     
-    
-    
     var onMoveLeft: (() -> Void)?
     var onMoveRight: (() -> Void)?
     var onMoveUp: (() -> Void)?
