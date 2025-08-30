@@ -33,14 +33,16 @@ class ViewController: UIViewController {
 
     @objc func touchUp() {
         button.backgroundColor = .red
-        let maxOffsetX = CGFloat.random(in: 0...(view.frame.width - button.frame.width))
-        let maxOffsetY = CGFloat.random(in: 0...(view.frame.height - button.frame.height))
+        let safeFrame = view.safeAreaLayoutGuide.layoutFrame
+        
+        let randomX = CGFloat.random(in: 0...(safeFrame.width - button.frame.width))
+        let randomY = CGFloat.random(in: 0...(safeFrame.height - button.frame.height))
 
         UIView.animate(withDuration: 0.2, animations: {
 
             self.button.snp.remakeConstraints { make in
-                make.leading.equalToSuperview().offset(maxOffsetX)
-                make.top.equalToSuperview().offset(maxOffsetY)
+                make.leading.equalTo(self.view.safeAreaLayoutGuide).offset(randomX)
+                make.top.equalTo(self.view.safeAreaLayoutGuide).offset(randomY)
             }
             self.view.layoutIfNeeded()
         })
