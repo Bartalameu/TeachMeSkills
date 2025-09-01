@@ -11,6 +11,10 @@ class MainViewController: UIViewController {
     
     private let gamingFieldView: UIView = UIView()
     
+    enum MoveDirection {
+        case left, right, up, down
+    }
+    
     private let ballView: CustomButton = {
         let ball = CustomButton(color: .orange)
         ball.widthAnchor.constraint(equalToConstant: 100).isActive = true
@@ -33,69 +37,66 @@ class MainViewController: UIViewController {
         buttonsCallBack()
     }
     
+    private func moveBall (forX x: CGFloat? = nil, forY y: CGFloat? = nil, direction: MoveDirection ) {
+        
+        switch (x, y, direction) {
+            
+        case  (let x?, nil, .left) :
+            UIView.animate(withDuration: 1) {
+                let maxX = self.gamingFieldView.bounds.minX + self.ballView.bounds.width / 2
+                let newX = max(self.ballView.center.x - x, maxX)
+                self.ballView.center.x = newX
+            }
+            
+        case (let x?, nil, .right):
+            UIView.animate(withDuration: 1) {
+                let maxX = self.gamingFieldView.bounds.maxX - self.ballView.bounds.width / 2
+                let newX = min(self.ballView.center.x + x, maxX)
+                self.ballView.center.x = newX
+            }
+            
+        case (nil, let y?, .up):
+            UIView.animate(withDuration: 1) {
+            let maxY = self.gamingFieldView.bounds.minY + self.ballView.bounds.height / 2
+            let newY = max(self.ballView.center.y - 50, maxY)
+            self.ballView.center.y = newY
+        }
+            
+        case (nil, let y?, .down):
+            UIView.animate(withDuration: 1) {
+                let maxY = self.gamingFieldView.bounds.maxY - self.ballView.bounds.height / 2
+                let newY = min(self.ballView.center.y + 50, maxY)
+                self.ballView.center.y = newY
+            }
+            
+        default:
+            print("X and Y nil")
+        }
+    }
+    
     private func buttonsCallBack(){
         
         buttonPanel.onMoveLeft = { [weak self] in
             guard let self = self else { return }
-            
-            if  self.ballView.layer.frame.minX - 50 > self.gamingFieldView.bounds.minX
-            {
-                UIView.animate(withDuration: 1) {
-                    self.ballView.center.x -= 50
-                }
-            } else {
-                UIView.animate(withDuration: 1) {
-                    self.ballView.center.x -= self.gamingFieldView.bounds.minX + self.ballView.layer.frame.minX
-                }
-            }
+            moveBall(forX: 50 , direction: .left)
         }
         
         buttonPanel.onMoveRight = { [weak self] in
             guard let self = self else { return }
-   
-            if self.ballView.layer.frame.maxX + 50  < self.gamingFieldView.bounds.maxX
-            {
-                UIView.animate(withDuration: 1) {
-                    self.ballView.center.x += 50
-                }
-            } else {
-                
-                UIView.animate(withDuration: 1) {
-                    self.ballView.center.x += self.gamingFieldView.bounds.maxX - self.ballView.layer.frame.maxX
-                }
-            }
+            moveBall(forX: 50 , direction: .right)
+
         }
         
         buttonPanel.onMoveUp = { [weak self] in
             guard let self = self else { return }
-            
-            
-            if self.ballView.layer.frame.minY  > self.gamingFieldView.bounds.minY
-            {
-                UIView.animate(withDuration: 1) {
-                    self.ballView.center.y -= 50
-                }
-            } else {
-                UIView.animate(withDuration: 1) {
-                    self.ballView.center.y -= self.gamingFieldView.bounds.minY + self.ballView.layer.frame.minY
-                }
-            }
-            
+            moveBall(forY: 50 , direction: .up)
+
         }
         
         buttonPanel.onMoveDown = { [weak self] in
             guard let self = self else { return }
-            
-            if self.ballView.layer.frame.maxY  < self.gamingFieldView.bounds.maxY
-            {
-                UIView.animate(withDuration: 1) {
-                    self.ballView.center.y += 50
-                }
-            } else {
-                UIView.animate(withDuration: 1) {
-                    self.ballView.center.y += self.gamingFieldView.bounds.maxY - self.ballView.layer.frame.maxY
-                }
-            }
+            moveBall(forY: 50 , direction: .down)
+
         }
     }
     
