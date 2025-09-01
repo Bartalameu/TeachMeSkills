@@ -8,12 +8,16 @@
 import UIKit
 
 class AlertView: UIView {
-    
+
     lazy var stackView: UIStackView = {
         let stack = UIStackView()
         stack.axis = .horizontal
         stack.spacing = 16
+        stack.distribution = .fillEqually
+        stack.layoutMargins = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
         stack.translatesAutoresizingMaskIntoConstraints = false
+        stack.addArrangedSubview(ignoreButton)
+        stack.addArrangedSubview(gotItButton)
         addSubview(stack)
         
         return stack
@@ -54,7 +58,6 @@ class AlertView: UIView {
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 15)
         button.setTitleColor(.white, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
-        stackView.addArrangedSubview(button)
         button.addTarget(self, action: #selector(ignoreAction), for: .touchUpInside)
         
         return button
@@ -68,27 +71,24 @@ class AlertView: UIView {
         button.backgroundColor = .systemGreen
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 15)
         button.setTitleColor(.white, for: .normal)
-        stackView.addArrangedSubview(button)
         button.addTarget(self, action: #selector(gotItAction), for: .touchUpInside)
 
         return button
     }()
     
     
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
+        configureUI()
+
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        configureUI()
-    }
-    
+
     
     private func configureUI() {
         
@@ -103,16 +103,11 @@ class AlertView: UIView {
             descriptionLabel.topAnchor.constraint(equalTo: offerLabel.bottomAnchor,constant: 48),
             descriptionLabel.centerXAnchor.constraint(equalTo: offerLabel.centerXAnchor),
             
-            ignoreButton.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 64),
-            ignoreButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-            ignoreButton.widthAnchor.constraint(equalToConstant: frame.width / 2 - 24),
-            ignoreButton.heightAnchor.constraint(equalToConstant: 48),
+            stackView.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 32),
+            stackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
+            stackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
+            stackView.heightAnchor.constraint(equalToConstant: 48)
             
-            gotItButton.topAnchor.constraint(equalTo: ignoreButton.topAnchor),
-            gotItButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
-            gotItButton.widthAnchor.constraint(equalTo: ignoreButton.widthAnchor),
-            gotItButton.heightAnchor.constraint(equalTo: ignoreButton.heightAnchor)
-
         ])
         
     }
