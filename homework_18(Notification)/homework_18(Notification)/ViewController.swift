@@ -12,8 +12,8 @@ class ViewController: UIViewController {
     private let textViewBottom: CGFloat = -150
     private var buttonSetBottomConstraint: NSLayoutConstraint!
     private let buttonSetBottom: CGFloat = -20
-
-   private lazy var scrollView : UIScrollView = {
+    
+    private lazy var scrollView : UIScrollView = {
         var scroll = UIScrollView()
         scroll.addSubview(textLabel)
         scroll.layer.borderWidth = 1.0
@@ -81,6 +81,10 @@ class ViewController: UIViewController {
         
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)),
                                                name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    private func unSubscriptionNotifications(){
+        NotificationCenter.default.removeObserver(self)
     }
     
     @objc private func keyboardWillShow (_ notification: Notification) {
@@ -152,6 +156,10 @@ class ViewController: UIViewController {
             
         ])
         
+    }
+    
+    deinit {
+        unSubscriptionNotifications()
     }
     
 }
